@@ -1,3 +1,7 @@
+"""
+This module initializes the Flask application.
+"""
+
 import os
 from flask import Flask
 from flask_cors import CORS
