@@ -35,4 +35,4 @@ jobs:
           docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/mp-frontend:latest
 
       - name: Deploy to EKS cluster
-        run: kubectl apply -f deployment.yaml
+        run:  cd starter/frontend/k8s &&  kubectl apply -f .
