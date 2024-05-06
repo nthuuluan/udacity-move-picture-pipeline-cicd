@@ -1,10 +1,9 @@
 name: Frontend CI
 
 on:
-  pull_request:
-    branches: [main]
-    paths:
-      - 'starter/frontend/**'
+  push:
+    branches:
+      - main
 
 jobs:
   lint_job:
@@ -84,4 +83,7 @@ jobs:
         run: cd starter/frontend && npm ci
 
       - name: Build Docker image
-        run: cd starter/frontend && docker build -t mp-frontend:latest .
+        run: |
+          docker build \
+            --build-arg REACT_APP_MOVIE_API_URL=${{ secrets.REACT_APP_MOVIE_API_URL }} \
+            -t mp-frontend:latest .
