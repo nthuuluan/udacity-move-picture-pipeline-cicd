@@ -60,4 +60,4 @@ jobs:
 
       - name: Build application using Docker
         run: |
-          docker build --tag mp-backend:latest .
+         cd starter/backend && docker build --tag mp-backend:latest .
