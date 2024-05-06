@@ -2,6 +2,7 @@ name: Frontend CD
 
 on:
   workflow_dispatch:
+  push:
     branches:
       - main
 
@@ -18,13 +19,13 @@ jobs:
           node-version: '16'
 
       - name: Install dependencies
-        run: npm install
+        run: cd starter/frontend && npm install
 
       - name: Linting
-        run: npm run lint
+        run: cd starter/frontend && npm run lint
 
-      - name: Testing
-        run: npm run test
+      - name: Run the test command
+        run: cd starter/frontend && npm run test
 
   build_and_deploy:
     needs: lint_and_test
