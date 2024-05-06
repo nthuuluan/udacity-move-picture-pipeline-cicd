@@ -63,7 +63,7 @@ jobs:
       - name: Run the test command
         run: cd starter/frontend && npm run test
 
-  build_job:
+  build:
     needs: [lint, test]
     runs-on: ubuntu-latest
 
