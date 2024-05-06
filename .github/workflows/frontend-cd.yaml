@@ -28,6 +28,11 @@ jobs:
           access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
+      - name: check docker image
+        run: |
+          docker images
+          
+
       - name: Push Docker image to ECR
         run: |
           docker tag mp-frontend:latest ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/mp-frontend:latest
