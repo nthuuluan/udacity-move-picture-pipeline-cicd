@@ -88,5 +88,5 @@ jobs:
       - name: Install dependencies
         run: cd starter/frontend && npm ci
 
-      - name: Build the application
-        run: cd starter/frontend && npm run build
+      - name: Build Docker image
+        run: cd starter/frontend && docker build -t mp-frontend:latest .
