@@ -42,9 +42,9 @@ jobs:
       - name: Install dependencies
         run: cd starter/frontend && npm ci
 
-      - name: Build Docker image
-        run: |
-          cd starter/frontend && docker build --build-arg=REACT_APP_MOVIE_API_URL=${{ secrets.REACT_APP_MOVIE_API_URL }} -t frontend:latest .
+      # - name: Build Docker image
+      #   run: |
+      #     cd starter/frontend && docker build --build-arg=REACT_APP_MOVIE_API_URL=${{ secrets.REACT_APP_MOVIE_API_URL }} -t frontend:latest .
 
       # Configure AWS credentials
       - name: Configure AWS credentials
@@ -62,10 +62,10 @@ jobs:
           access-key-id: ${{ secrets.ACCOUNT_AWS_ACCESS_KEY_ID }}
           secret-access-key: ${{ secrets.ACCOUNT_AWS_SECRET_ACCESS_KEY }}
 
-      - name: Push Docker image to ECR
-        run: |
-          docker tag frontend:latest ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/frontend:latest
-          docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/frontend:latest
+      # - name: Push Docker image to ECR
+      #   run: |
+      #     docker tag frontend:latest ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/frontend:latest
+      #     docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/frontend:latest
       
       - name: Update-kubeconfig
         run: |
@@ -73,7 +73,7 @@ jobs:
       
       - name: Check file
         run: |
-          ls
+          cd starter/frontend/k8s && ls
 
       - name: Deploy to EKS cluster
         run: |
