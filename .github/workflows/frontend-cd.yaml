@@ -35,14 +35,6 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v2
-        with:
-          node-version: '16'
-
-      - name: Install dependencies
-        run: cd starter/frontend && npm ci
-
       - name: Build Docker image
         run: |
           cd starter/frontend && docker build --build-arg=REACT_APP_MOVIE_API_URL=${{ secrets.REACT_APP_MOVIE_API_URL }} -t frontend:latest .
@@ -60,8 +52,8 @@ jobs:
         uses: aws-actions/amazon-ecr-login@v1
         with:
           registry: ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com
-          access-key-id: ${{ secrets.ACCOUNT_AWS_ACCESS_KEY_ID }}
-          secret-access-key: ${{ secrets.ACCOUNT_AWS_SECRET_ACCESS_KEY }}
+          access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
       - name: Push Docker image to ECR
         run: |
