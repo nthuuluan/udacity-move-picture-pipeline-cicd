@@ -39,7 +39,7 @@ jobs:
 
       - name: Build Docker image
         run: |
-         cd starter/backend && docker build --tag backend:latest .
+         cd starter/backend && docker build --tag backend:${GITHUB_SHA::7} .
 
       # Configure AWS credentials
       - name: Configure AWS credentials

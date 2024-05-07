@@ -37,7 +37,7 @@ jobs:
 
       - name: Build Docker image
         run: |
-          cd starter/frontend && docker build --build-arg=REACT_APP_MOVIE_API_URL=${{ secrets.REACT_APP_MOVIE_API_URL }} -t frontend:latest .
+          cd starter/frontend && docker build --build-arg=REACT_APP_MOVIE_API_URL=${{ secrets.REACT_APP_MOVIE_API_URL }} -t frontend:${GITHUB_SHA::7} .
 
       # Configure AWS credentials
       - name: Configure AWS credentials
