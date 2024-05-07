@@ -57,9 +57,9 @@ jobs:
 
       - name: Push Docker image to ECR
         run: |
-          docker tag frontend:latest ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/frontend:latest
-          docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/frontend:latest
-      
+          docker tag frontend:${GITHUB_SHA::7} ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/frontend:${GITHUB_SHA::7}
+          docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/frontend:${GITHUB_SHA::7}
+
       - name: Update-kubeconfig
         run: |
           aws eks --region ${{ secrets.AWS_REGION }}  update-kubeconfig --name cluster 
@@ -67,7 +67,7 @@ jobs:
       - name: Set image for Kubernetes deployment
         run: |
           cd starter/frontend/k8s
-          kustomize edit set image frontend=${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/frontend:latest
+          kustomize edit set image frontend=${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/frontend:${GITHUB_SHA::7}
 
       - name: Apply Kubernetes manifests to EKS cluster
         run: |
