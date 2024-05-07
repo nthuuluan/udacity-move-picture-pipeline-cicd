@@ -7,28 +7,28 @@ on:
       - main
 
 jobs:
-  # lint_and_test:
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - name: Checkout code
-  #       uses: actions/checkout@v2
+  lint_and_test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
       
-  #     - name: Setup Node.js
-  #       uses: actions/setup-node@v2
-  #       with:
-  #         node-version: '16'
+      - name: Setup Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '16'
 
-  #     - name: Install dependencies
-  #       run: cd starter/frontend && npm install
+      - name: Install dependencies
+        run: cd starter/frontend && npm install
 
-  #     - name: Linting
-  #       run: cd starter/frontend && npm run lint
+      - name: Linting
+        run: cd starter/frontend && npm run lint
 
-  #     - name: Run the test command
-  #       run: cd starter/frontend && npm run test
+      - name: Run the test command
+        run: cd starter/frontend && npm run test
 
   build_and_deploy:
-    # needs: lint_and_test
+    needs: lint_and_test
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -42,9 +42,9 @@ jobs:
       - name: Install dependencies
         run: cd starter/frontend && npm ci
 
-      # - name: Build Docker image
-      #   run: |
-      #     cd starter/frontend && docker build --build-arg=REACT_APP_MOVIE_API_URL=${{ secrets.REACT_APP_MOVIE_API_URL }} -t frontend:latest .
+      - name: Build Docker image
+        run: |
+          cd starter/frontend && docker build --build-arg=REACT_APP_MOVIE_API_URL=${{ secrets.REACT_APP_MOVIE_API_URL }} -t frontend:latest .
 
       # Configure AWS credentials
       - name: Configure AWS credentials
@@ -62,19 +62,15 @@ jobs:
           access-key-id: ${{ secrets.ACCOUNT_AWS_ACCESS_KEY_ID }}
           secret-access-key: ${{ secrets.ACCOUNT_AWS_SECRET_ACCESS_KEY }}
 
-      # - name: Push Docker image to ECR
-      #   run: |
-      #     docker tag frontend:latest ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/frontend:latest
-      #     docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/frontend:latest
+      - name: Push Docker image to ECR
+        run: |
+          docker tag frontend:latest ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/frontend:latest
+          docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/frontend:latest
       
       - name: Update-kubeconfig
         run: |
           aws eks --region ${{ secrets.AWS_REGION }}  update-kubeconfig --name cluster 
       
-      - name: Check file
-        run: |
-          cd starter/frontend/k8s && ls
-     
       - name: Set image for Kubernetes deployment
         run: |
           cd starter/frontend/k8s
