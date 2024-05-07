@@ -6,7 +6,7 @@ on:
       - main
 
 jobs:
-  deploy:
+  lint_and_test:
     runs-on: ubuntu-latest
 
     steps:
@@ -26,6 +26,14 @@ jobs:
 
       - name: Run tests
         run: cd starter/backend && pytest
+
+  deploy:
+    needs: lint_and_test
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
 
       - name: Build Docker image
         run: |
