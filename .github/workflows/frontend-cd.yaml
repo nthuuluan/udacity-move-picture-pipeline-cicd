@@ -70,6 +70,10 @@ jobs:
       - name: Update-kubeconfig
         run: |
           aws eks --region ${{ secrets.AWS_REGION }}  update-kubeconfig --name cluster 
+      
+      - name: Check file
+        run: |
+          ls
 
       - name: Deploy to EKS cluster
         run: |
