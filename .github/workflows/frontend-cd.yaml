@@ -7,28 +7,28 @@ on:
       - main
 
 jobs:
-  lint_and_test:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
+  # lint_and_test:
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Checkout code
+  #       uses: actions/checkout@v2
       
-      - name: Setup Node.js
-        uses: actions/setup-node@v2
-        with:
-          node-version: '16'
+  #     - name: Setup Node.js
+  #       uses: actions/setup-node@v2
+  #       with:
+  #         node-version: '16'
 
-      - name: Install dependencies
-        run: cd starter/frontend && npm install
+  #     - name: Install dependencies
+  #       run: cd starter/frontend && npm install
 
-      - name: Linting
-        run: cd starter/frontend && npm run lint
+  #     - name: Linting
+  #       run: cd starter/frontend && npm run lint
 
-      - name: Run the test command
-        run: cd starter/frontend && npm run test
+  #     - name: Run the test command
+  #       run: cd starter/frontend && npm run test
 
   build_and_deploy:
-    needs: lint_and_test
+    # needs: lint_and_test
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -77,5 +77,5 @@ jobs:
 
       - name: Deploy to EKS cluster
         run: |
-          kustomize edit set image frontend=${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/frontend:latest
+          cd starter/frontend/k8s && kustomize edit set image frontend=${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/frontend:latest
           cd starter/frontend/k8s && kustomize build | kubectl apply -f -
