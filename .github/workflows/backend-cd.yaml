@@ -1,0 +1,57 @@
+name: Backend CD
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Setup Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.9'
+
+      - name: Install dependencies
+        run: cd starter/backend && pip install -r requirements.txt
+
+      - name: Run linting
+        run: cd starter/backend && pylint .
+
+      - name: Run tests
+        run: cd starter/backend && pytest
+
+      - name: Build Docker image
+        run: |
+         cd starter/backend && docker build --tag backend:latest .
+
+      - name: Login to ECR
+        uses: aws-actions/amazon-ecr-login@v1
+        with:
+          registry: ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com
+          access-key-id: ${{ secrets.ACCOUNT_AWS_ACCESS_KEY_ID }}
+          secret-access-key: ${{ secrets.ACCOUNT_AWS_SECRET_ACCESS_KEY }}
+
+      - name: Push Docker image to ECR
+        run: |
+          docker tag backend:latest ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/backend:latest
+          docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/backend:latest
+
+      - name: Update-kubeconfig
+        run: |
+          aws eks --region ${{ secrets.AWS_REGION }}  update-kubeconfig --name cluster 
+      
+      - name: Set image for Kubernetes deployment
+        run: |
+          cd starter/backend/k8s
+          kustomize edit set image backend=${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/backend:latest
+
+      - name: Apply Kubernetes manifests to EKS cluster
+        run: |
+          cd starter/backend/k8s && kustomize build | kubectl apply -f -
