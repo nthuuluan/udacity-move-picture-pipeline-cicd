@@ -44,7 +44,7 @@ jobs:
 
       - name: Build Docker image
         run: |
-          cd starter/frontend && docker build --build-arg=REACT_APP_MOVIE_API_URL=${{ secrets.REACT_APP_MOVIE_API_URL }} -t mp-frontend:latest .
+          cd starter/frontend && docker build --build-arg=REACT_APP_MOVIE_API_URL=${{ secrets.REACT_APP_MOVIE_API_URL }} -t frontend:latest .
 
       # Configure AWS credentials
       - name: Configure AWS credentials
@@ -59,18 +59,13 @@ jobs:
         uses: aws-actions/amazon-ecr-login@v1
         with:
           registry: ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com
-          access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-
-      - name: check docker image
-        run: |
-          docker images
-          
+          access-key-id: ${{ secrets.ACCOUNT_AWS_ACCESS_KEY_ID }}
+          secret-access-key: ${{ secrets.ACCOUNT_AWS_SECRET_ACCESS_KEY }}
 
       - name: Push Docker image to ECR
         run: |
-          docker tag mp-frontend:latest ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/mp-frontend:latest
-          docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/mp-frontend:latest
+          docker tag frontend:latest ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/frontend:latest
+          docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/frontend:latest
 
       - name: Deploy to EKS cluster
         run:  cd starter/frontend/k8s &&  kubectl apply -f .

@@ -84,4 +84,4 @@ jobs:
 
       - name: Build Docker image
         run: |
-          cd starter/frontend && docker build --build-arg=REACT_APP_MOVIE_API_URL=${{ secrets.REACT_APP_MOVIE_API_URL }} -t mp-frontend:latest .
+          cd starter/frontend && docker build --build-arg=REACT_APP_MOVIE_API_URL=${{ secrets.REACT_APP_MOVIE_API_URL }} -t frontend:latest .
