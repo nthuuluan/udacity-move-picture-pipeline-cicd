@@ -69,6 +69,6 @@ jobs:
 
       - name: Deploy to EKS cluster
         run: |
-          cd starter/frontend/k8s \
+          cd starter/frontend/k8s 
           kustomize edit set image frontend=${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/frontend:latest
           kustomize build | kubectl apply -f -
