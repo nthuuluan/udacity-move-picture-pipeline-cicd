@@ -74,8 +74,13 @@ jobs:
       - name: Check file
         run: |
           cd starter/frontend/k8s && ls
-
-      - name: Deploy to EKS cluster
+     
+      - name: Set image for Kubernetes deployment
         run: |
-          cd starter/frontend/k8s && kustomize edit set image frontend=${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/frontend:latest
+          cd starter/frontend/k8s
+          kustomize edit set image frontend=${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/frontend:latest
+
+      - name: Apply Kubernetes manifests to EKS cluster
+        run: |
           cd starter/frontend/k8s && kustomize build | kubectl apply -f -
+
