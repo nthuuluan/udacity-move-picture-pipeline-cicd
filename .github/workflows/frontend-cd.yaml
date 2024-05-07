@@ -66,6 +66,10 @@ jobs:
         run: |
           docker tag frontend:latest ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/frontend:latest
           docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/frontend:latest
+      
+      - name: Update-kubeconfig
+        run: |
+          aws eks --region ${{ secrets.AWS_REGION }}  update-kubeconfig --name cluster 
 
       - name: Deploy to EKS cluster
         run: |
